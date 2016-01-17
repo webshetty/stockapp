@@ -4,10 +4,12 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('stockapp', [
   'ionic',
-   'stockapp.controllers',
-   'stockapp.services',
-   'stockapp.filters',
-   'stockapp.directives'
+  'nvd3',
+  'nvChart',
+  'stockapp.controllers',
+  'stockapp.services',
+  'stockapp.filters',
+  'stockapp.directives'
  ])
 
 .run(function($ionicPlatform) {
