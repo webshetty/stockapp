@@ -70,4 +70,56 @@ angular.module('stockapp.services', [])
 
 })
 
+// Notes Service
+.factory('notesService', function(notesCacheService) {
+
+      var getNotes = function(ticker){
+        return notesCacheService.get(ticker);
+      };
+
+      var addNote = function(ticker, note){
+        var stockNotes = [];
+        if(notesCacheService.get(ticker)){
+          stockNotes = notesCacheService.get(ticker);
+          stockNotes.push(note);
+        }else{
+          stockNotes.push(note);
+        }
+        notesCacheService.put(ticker, stockNotes);
+      };
+
+      var deleteNote = function(index, ticker){
+        console.log(ticker);
+        console.log(index);
+        var stockNotes = [];
+        stockNotes = notesCacheService.get(ticker);
+        console.log(stockNotes);
+        stockNotes.splice(index,1);
+        notesCacheService.put(ticker, stockNotes);
+      };
+
+  return {
+    getNotes: getNotes,
+    addNote: addNote,
+    deleteNote: deleteNote
+  };
+
+})
+
+// Notes Cache
+    .factory('notesCacheService', function(CacheFactory) {
+      var notesCache;
+
+      if(!CacheFactory.get('notesCache')){
+        notesCache = CacheFactory('notesCache', {
+          storageMode: 'localStorage'
+        });
+      }else {
+        notesCache = Factory.get('notesCache');
+      }
+      return notesCache;
+  })
+
+
+
 ;

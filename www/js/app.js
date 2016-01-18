@@ -4,6 +4,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('stockapp', [
   'ionic',
+  'angular-cache',
   'nvd3',
   'nvChart',
   'stockapp.controllers',
