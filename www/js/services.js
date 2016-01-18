@@ -9,7 +9,51 @@ angular.module('stockapp.services', [])
   };
 })
 
-  .factory('dateService', function($filter) {
+//Modal Service
+.factory('modalService' , function($ionicModal) {
+
+  this.openModal = function(id){
+    var _this = this;
+    if(id == 1){
+      $ionicModal.fromTemplateUrl('templates/search.html', {
+        scope: null,
+        controller: 'SearchCtrl'
+      }).then(function(modal) {
+        _this.modal = modal;
+        _this.modal.show();
+      });
+    }
+    else if(id == 2){
+      $ionicModal.fromTemplateUrl('templates/login.html', {
+        scope: $scope
+      }).then(function(modal) {
+        $scope.modal = modal;
+      });
+    }
+    else if(id == 3){
+      $ionicModal.fromTemplateUrl('templates/login.html', {
+        scope: $scope
+      }).then(function(modal) {
+        $scope.modal = modal;
+      });
+    }
+  };
+
+  this.closeModal = function() {
+    var _this = this;
+    if(!_this.modal) return;
+    _this.modal.hide();
+    _this.modal.remove();
+  };
+
+  return {
+    openModal: this.openModal,
+    closeModal: this.closeModal
+  };
+})
+
+//Date Service
+.factory('dateService', function($filter) {
   var currentdate = function(){
       var d = new Date();
       var date = $filter('date')(d, 'yyyy-MM-dd');
@@ -28,6 +72,7 @@ angular.module('stockapp.services', [])
   };
 })
 
+//Stock Data Related Service
 .factory('stockDataService', function($q, $http, encodeURIService){
   var getPriceData = function(ticker){
     var deferred = $q.defer(),
@@ -69,6 +114,35 @@ angular.module('stockapp.services', [])
   };
 
 })
+
+.factory('searchSearvice', ['$q', '$http' ,
+  function($q, $http ) {
+
+    return {
+      search: function(query){
+        console.log(query);
+        var deferred = $q.defer(),
+            url = 'https://s.yimg.com/aq/autoc?query='+ query + '&region=CA&lang=en-CA&callback=YAHOO.util.ScriptNodeDataSource.callbacks';
+
+        YAHOO =  window.YAHOO = {
+          util:{
+            ScriptNodeDataSource: {}
+          }
+        };
+
+        YAHOO.util.ScriptNodeDataSource.callbacks = function(data){
+          var jasonData = data.ResultSet.Result;
+          deferred.resolve(jasonData);
+        };
+        $http.jsonp(url)
+          .then(YAHOO.util.ScriptNodeDataSource.callbacks);
+
+        return deferred.promise;
+
+      }
+    };
+
+}])
 
 // Notes Service
 .factory('notesService', function(notesCacheService) {

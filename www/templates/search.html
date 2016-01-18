@@ -1,5 +1,27 @@
-<ion-view view-title="Search">
-  <ion-content>
-    <h1>Search</h1>
-  </ion-content>
-</ion-view>
+<ion-modal-view ng-controller="SearchCtrl" id="search">
+  <div class="bar bar-header bar-dark item-input-inset">
+    <div class="item-input-wrapper">
+      <i class="icon ion-ios-search placeholder-icon"></i>
+      <input type="search" placeholder="Search stocks..." ng-model="searchQuery" ng-change="search()">
+    </div>
+    <button class="button button-clear" ng-click="closeModal()">
+      Cancel
+    </button>
+  </div>
+
+<ion-content  class="has-header">
+
+  <div class="row float-center">
+    <div class="col">
+      <ion-spinner class="ripple-energized margin-auto" ng-show="searchQuery" ng-hide="searchResults || !searchQuery"></ion-spinner>
+    </div>
+  </div>
+
+  <ion-list>
+    <ion-item class="item-dark border-none" ng-repeat="stock in searchResults" ng-click="goToStockDetails(stock.symbol)">
+      <h3 class="light">{{stock.symbol}}  <span  class="font-normal"> -  {{stock.name}}</span></h3>
+      <h6 class="light">{{stock.exchDisp}}</h6>
+    </ion-item>
+  </ion-list>
+</ion-content>
+</ion-modal-view>

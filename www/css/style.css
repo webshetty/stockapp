@@ -1,3 +1,6 @@
+/*Search Style*/
+
+
 /*Note card style */
 #stock-notes .add-stock-note {
   border: 1px solid #ff9800;
@@ -92,4 +95,17 @@
 
 .no-margin {
   margin: 0 !important;
+}
+
+.font-normal {
+  font-weight: normal !important;
+}
+
+.border-none {
+  border: none !important;
+}
+
+.margin-auto,
+.margin-auto svg {
+  margin: 0 auto !important;
 }
