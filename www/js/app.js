@@ -5,6 +5,7 @@
 angular.module('stockapp', [
   'ionic',
   'angular-cache',
+  'firebase',
   'nvd3',
   'nvChart',
   'stockapp.controllers',

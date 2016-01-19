@@ -1,7 +1,7 @@
 angular.module('stockapp.controllers', [])
 
-.controller('AppCtrl', ['$scope','modalService',
-  function($scope, modalService) {
+.controller('AppCtrl', ['$scope','modalService','userService',
+  function($scope, modalService, userService) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -11,7 +11,31 @@ angular.module('stockapp.controllers', [])
   //});
   $scope.modalService = modalService;
 
+  $scope.logout = function(){
+    userService.logout();
+  };
+
 }])
+
+.controller('LoginSignupCtrl' , [ '$scope', 'modalService', 'userService',
+  function($scope, modalService, userService) {
+
+    $scope.closeModal =  function(){
+        modalService.closeModal();
+    };
+
+    $scope.signup = function(user){
+      console.log("email ", user.email);
+      console.log("password ", user.password);
+      userService.signup(user);
+    };
+
+    $scope.login = function(user){
+      userService.login(user);
+    };
+
+}])
+
 
 .controller('SearchCtrl', ['$scope', '$state','modalService','searchSearvice',
   function($scope, $state, modalService, searchSearvice) {

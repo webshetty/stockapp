@@ -1,5 +1,7 @@
 angular.module('stockapp.services', [])
 
+.constant('FIREBASE_URL', 'https://mystockmarketapp.firebaseio.com/')
+
 .factory('encodeURIService', function() {
   return {
     encode: function(string){
@@ -25,16 +27,20 @@ angular.module('stockapp.services', [])
     }
     else if(id == 2){
       $ionicModal.fromTemplateUrl('templates/login.html', {
-        scope: $scope
+        scope: null,
+        controller: 'LoginCtrl'
       }).then(function(modal) {
-        $scope.modal = modal;
+        _this.modal = modal;
+        _this.modal.show();
       });
     }
     else if(id == 3){
-      $ionicModal.fromTemplateUrl('templates/login.html', {
-        scope: $scope
+      $ionicModal.fromTemplateUrl('templates/signup.html', {
+        scope: null,
+        controller: 'LoginCtrl'
       }).then(function(modal) {
-        $scope.modal = modal;
+        _this.modal = modal;
+        _this.modal.show();
       });
     }
   };
@@ -50,6 +56,68 @@ angular.module('stockapp.services', [])
     openModal: this.openModal,
     closeModal: this.closeModal
   };
+})
+
+
+//Firebase Integration
+.factory('firebaseRef' , function($firebaseObject, FIREBASE_URL ) {
+  var firebaseRef = new Firebase(FIREBASE_URL);
+  return firebaseRef;
+})
+
+//user Service
+.factory('userService' , function($rootScope, firebaseRef, modalService) {
+
+  var login = function(user) {
+    firebaseRef.authWithPassword({
+      email: user.email,
+      password:user.password
+    }, function(error, authData){
+      if(error){
+        console.log("Invalid user ", error);
+      }else{
+        $rootScope.currentUser = user;
+        modalService.closeModal();
+        console.log("Login successfull ", authData);
+      }
+    });
+   };
+
+  var logout = function() {
+    firebaseRef.unauth();
+    $rootScope.currentUser = '';
+  };
+
+  var signup = function(user){
+    console.log("email ", user.email);
+    console.log("password ", user.password);
+     firebaseRef.createUser({
+       email: user.email,
+       password: user.password
+     }, function(error, userData) {
+       if(error){
+         console.log("error creating user ", error);
+       }else{
+         login(user);
+         console.log("User created successfully with uid " , userData.uid);
+       }
+     });
+  };
+
+  var getUser = function(){
+    return firebaseRef.getAuth();//gets user deatails;
+  };
+
+  if(getUser()){
+    $rootScope.currentUser= getUser();
+  }
+
+  return {
+    login: login,
+    logout: logout,
+    signup: signup
+  };
+
 })
 
 //Date Service
